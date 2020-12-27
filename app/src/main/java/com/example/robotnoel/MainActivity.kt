@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val simpleSeekBar = findViewById<View>(R.id.seekBar) as SeekBar
-        val textView = findViewById<View>(R.id.hw) as TextView
 
         val manager = getSystemService(USB_SERVICE) as UsbManager
         val availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager)
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         simpleSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                textView.text = "Hello $progress"
                 port.write("${progress + 1}\n".toByteArray(), 20);
             }
 
