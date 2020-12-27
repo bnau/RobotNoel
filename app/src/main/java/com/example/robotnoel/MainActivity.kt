@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.hoho.android.usbserial.driver.UsbSerialPort
 import com.hoho.android.usbserial.driver.UsbSerialProber
@@ -24,18 +23,18 @@ class MainActivity : AppCompatActivity() {
         if (availableDrivers.isEmpty()) {
             return
         }
+        val driver =
+            availableDrivers.find { it.device.productId == 67 } // 67 is just a hard coded value to distinguish the two arduinos
+        val connection = manager.openDevice(driver?.device) ?: return
 
-        val driver = availableDrivers[0]
-        val connection = manager.openDevice(driver.device)?:return
+        val port = driver?.ports?.get(0)
 
-        val port = driver.ports[0]
-
-        port.open(connection)
-        port.setParameters(9600, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+        port?.open(connection)
+        port?.setParameters(9600, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
 
         simpleSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                port.write("${progress + 1}\n".toByteArray(), 20);
+                port?.write("${progress + 1}\n".toByteArray(), 20);
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
